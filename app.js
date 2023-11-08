@@ -5,7 +5,7 @@ const cors = require("cors");
 const morgan = require("morgan");
 const usersRoutes = require("./api/users.routes");
 const recipeRoutes = require("./api/recipe/recipe.routes");
-
+const ingredientRoutes = require("./api/ingredient/ingredient.routes");
 const categoryRoutes = require("./api/category/category.routes");
 const errorHandler = require("./middlewares/errorHandler");
 const notFound = require("./middlewares/notFound");
@@ -13,6 +13,7 @@ const path = require("path");
 const passport = require("passport");
 const { localStrategy, jwtStrategy } = require("./middlewares/passport");
 const port = 8000;
+
 app.use(express.json());
 app.use(
   cors({
@@ -29,7 +30,7 @@ app.use("/media", express.static(path.join(__dirname, "media")));
 //
 app.use("/api", usersRoutes);
 app.use("/api", recipeRoutes);
-
+app.use("/api", ingredientRoutes);
 app.use("/api", categoryRoutes);
 app.use(errorHandler);
 app.use(notFound);
