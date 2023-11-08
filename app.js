@@ -5,6 +5,8 @@ const cors = require("cors");
 const morgan = require("morgan");
 const usersRoutes = require("./api/users.routes");
 const recipeRoutes = require("./api/recipe/recipe.routes");
+
+const categoryRoutes = require("./api/category/category.routes");
 const errorHandler = require("./middlewares/errorHandler");
 const notFound = require("./middlewares/notFound");
 const path = require("path");
@@ -27,6 +29,8 @@ app.use("/media", express.static(path.join(__dirname, "media")));
 //
 app.use("/api", usersRoutes);
 app.use("/api", recipeRoutes);
+
+app.use("/api", categoryRoutes);
 app.use(errorHandler);
 app.use(notFound);
 connectDB();
