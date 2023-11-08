@@ -8,3 +8,10 @@ exports.getAllCategories = async (req, res, next) => {
     next(error);
   }
 };
+exports.createCategory = async (req, res, next) => {
+  try {
+    req.body;
+  } catch (error) {
+    next(error);
+  }
+};
