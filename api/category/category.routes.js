@@ -1,5 +1,6 @@
 const express = require("express");
-const { getAllCategories } = require("./category.controller");
+const { getAllCategories, createCategory } = require("./category.controller");
+const passport = require("passport");
 const router = express.Router();
 
 router.get("/categories", getAllCategories);
