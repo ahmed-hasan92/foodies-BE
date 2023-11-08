@@ -3,7 +3,11 @@ const { getAllCategories, createCategory } = require("./category.controller");
 const passport = require("passport");
 const router = express.Router();
 
-router.get("/categories", getAllCategories);
+router.get(
+  "/categories",
+  passport.authenticate("jwt", { session: false }),
+  getAllCategories
+);
 router.post(
   "/categories",
   passport.authenticate("jwt", { session: false }),
