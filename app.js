@@ -18,12 +18,13 @@ app.use(
     origin: ["http://localhost:3000"],
   })
 );
+//
 app.use(morgan("dev"));
 app.use(passport.initialize());
 passport.use("local", localStrategy);
 passport.use("jwt", jwtStrategy);
 app.use("/media", express.static(path.join(__dirname, "media")));
-
+//
 app.use("/api", usersRoutes);
 app.use("/api", recipeRoutes);
 app.use(errorHandler);
