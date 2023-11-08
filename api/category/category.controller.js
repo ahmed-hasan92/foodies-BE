@@ -1,4 +1,5 @@
 const Category = require("../../models/Category");
+const User = require("../../models/User");
 
 exports.getAllCategories = async (req, res, next) => {
   try {
@@ -8,3 +9,4 @@ exports.getAllCategories = async (req, res, next) => {
     next(error);
   }
 };
+exports.createCategory = async (req, res, next) => {};
