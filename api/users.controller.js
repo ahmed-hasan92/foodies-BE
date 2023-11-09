@@ -2,6 +2,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { generateRandom } = require("../generateRandom");
 const User = require("../models/User");
+const Recipe = require("../models/Recipe");
 require("dotenv").config();
 
 const hashPassword = async (password) => {
@@ -51,8 +52,26 @@ exports.signIn = async (req, res, next) => {
 
 exports.getAllUsers = async (req, res, next) => {
   try {
-    const user = await User.find();
+    const user = await User.find().populate("recipes");
     res.status(200).json(user);
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.createRecipe = async (req, res, next) => {
+  try {
+    req.body.user = req.user._id;
+    if (req.file) {
+      req.body.image = req.path;
+    }
+    const recipe = await Recipe.create(req.body);
+
+    await req.user.updateOne({ $push: { recipes: recipe } });
+
+    res.status(201).json({
+      message: `a new recipe ${recipe.title} has been added `,
+    });
   } catch (error) {
     next(error);
   }
