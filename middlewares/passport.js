@@ -37,6 +37,8 @@ const jwtStrategy = new JwtStrategy(
     try {
       const user = User.findOne({ _id: payload._id });
       if (!user) return done(null, false);
+      const isAdmin = payload.isAdmin;
+      user.isAdmin = isAdmin;
       return done(null, user);
     } catch (error) {
       done(error);
