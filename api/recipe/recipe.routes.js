@@ -1,12 +1,12 @@
 const express = require("express");
 const upload = require("../../middlewares/multer");
 const passport = require("passport");
-const { createRecipe } = require("./recipe.controller");
+const { getRecipes } = require("./recipe.controller");
+
 const router = express.Router();
-router.post(
-  "/recipe",
+router.get(
+  "/recipes",
   passport.authenticate("jwt", { session: false }),
-  upload.single("image"),
-  createRecipe
+  getRecipes
 );
 module.exports = router;
