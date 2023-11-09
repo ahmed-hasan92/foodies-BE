@@ -1,12 +1,13 @@
 const express = require("express");
 const upload = require("../../middlewares/multer");
+const passport = require("passport");
 const {
   getAllCategories,
   createCategory,
   deleteCategory,
   updateCategory,
 } = require("./category.controller");
-const passport = require("passport");
+
 const router = express.Router();
 
 router.get(
