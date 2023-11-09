@@ -1,5 +1,11 @@
 const express = require("express");
-const { getAllCategories, createCategory } = require("./category.controller");
+const upload = require("../../middlewares/multer");
+const {
+  getAllCategories,
+  createCategory,
+  deleteCategory,
+  updateCategory,
+} = require("./category.controller");
 const passport = require("passport");
 const router = express.Router();
 
@@ -11,7 +17,19 @@ router.get(
 router.post(
   "/categories",
   passport.authenticate("jwt", { session: false }),
+  upload.single("image"),
   createCategory
+);
+router.delete(
+  "/categories/:categoryId",
+  passport.authenticate("jwt", { session: false }),
+  deleteCategory
+);
+router.put(
+  "/categories/:categoryId",
+  passport.authenticate("jwt", { session: false }),
+  upload.single("image"),
+  updateCategory
 );
 
 module.exports = router;

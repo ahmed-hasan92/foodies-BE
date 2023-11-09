@@ -13,6 +13,7 @@ const generateToken = (user) => {
   const payload = {
     _id: user._id,
     username: user.username,
+    isAdmin: user.isAdmin,
   };
   const token = jwt.sign(payload, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_TOKEN_EXP,
@@ -29,7 +30,9 @@ exports.signUp = async (req, res, next) => {
     if (req.file) {
       req.body.image = req.path;
     }
-
+    if (req.body.isAdmin) {
+      req.body.isAdmin = true;
+    }
     const newUser = await User.create(req.body);
     const token = generateToken(newUser);
     res.status(201).json({ token });

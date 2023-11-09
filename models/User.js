@@ -8,6 +8,7 @@ const userSchema = new Schema({
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   image: String,
+  isAdmin: { type: Boolean, default: false },
   recipes: [{ type: Schema.Types.ObjectId, ref: "Recipe" }],
   ingredients: [{ type: Schema.Types.ObjectId, ref: "Ingredient" }],
 });
