@@ -35,10 +35,11 @@ const jwtStrategy = new JwtStrategy(
   },
   async (payload, done) => {
     try {
-      const user = User.findOne({ _id: payload._id });
+      const user = await User.findOne({ _id: payload._id });
       if (!user) return done(null, false);
       const isAdmin = payload.isAdmin;
       user.isAdmin = isAdmin;
+      console.log(user);
       return done(null, user);
     } catch (error) {
       done(error);
