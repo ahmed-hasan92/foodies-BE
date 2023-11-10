@@ -39,7 +39,7 @@ const jwtStrategy = new JwtStrategy(
       if (!user) return done(null, false);
       const isAdmin = payload.isAdmin;
       user.isAdmin = isAdmin;
-      console.log(user);
+
       return done(null, user);
     } catch (error) {
       done(error);

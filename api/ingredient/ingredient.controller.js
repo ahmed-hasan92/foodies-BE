@@ -4,7 +4,7 @@ exports.getAllIngredients = async (req, res, next) => {
   try {
     req.body.user = req.user._id;
 
-    const ingredients = await Ingredient.find();
+    const ingredients = await Ingredient.find().populate("user");
     res.status(200).json(ingredients);
   } catch (error) {
     next(error);

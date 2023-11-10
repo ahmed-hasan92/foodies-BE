@@ -6,6 +6,7 @@ const {
   createCategory,
   deleteCategory,
   updateCategory,
+  addRecipeToCategory,
 } = require("./category.controller");
 
 const router = express.Router();
@@ -31,6 +32,11 @@ router.put(
   passport.authenticate("jwt", { session: false }),
   upload.single("image"),
   updateCategory
+);
+router.post(
+  "/categories/:categoryId/:recipeId",
+  passport.authenticate("jwt", { session: false }),
+  addRecipeToCategory
 );
 
 module.exports = router;

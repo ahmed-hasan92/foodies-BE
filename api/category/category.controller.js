@@ -1,10 +1,11 @@
 const Category = require("../../models/Category");
 const User = require("../../models/User");
+const Recipe = require("../../models/Recipe");
 
 exports.getAllCategories = async (req, res, next) => {
   try {
     req.body.user = req.user._id;
-    const categories = await Category.find();
+    const categories = await Category.find().populate("recipes");
     res.status(200).json(categories);
   } catch (error) {
     next(error);
@@ -79,6 +80,39 @@ exports.updateCategory = async (req, res, next) => {
     }
     await category.updateOne(req.body);
     res.status(200).json("The category has been updated!");
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.addRecipeToCategory = async (req, res, next) => {
+  try {
+    const { categoryId, recipeId } = req.params;
+
+    const category = await Category.findById(categoryId);
+    if (!category) {
+      return res.status(404).json(`This category isn't found`);
+    }
+    const recipe = await Recipe.findById(recipeId);
+    if (!recipe) {
+      return res.status(404).json("This recipe isn't found");
+    }
+
+    if (!recipe.user.equals(req.user._id)) {
+      return res
+        .status(403)
+        .json(
+          "You don't have the permission to make this action! You must be either the recipe creator or an admin"
+        );
+    }
+
+    category.recipes.push(recipeId);
+    await category.save();
+    res
+      .status(200)
+      .json(
+        `The recipe ${recipe.title} has been added successfully to the category ${category.name}`
+      );
   } catch (error) {
     next(error);
   }
