@@ -3,6 +3,8 @@ const jwt = require("jsonwebtoken");
 const { generateRandom } = require("../generateRandom");
 const User = require("../models/User");
 const Recipe = require("../models/Recipe");
+const Ingredient = require("../models/Ingredient");
+const Category = require("../models/Category");
 require("dotenv").config();
 
 const hashPassword = async (password) => {
@@ -76,3 +78,50 @@ exports.createRecipe = async (req, res, next) => {
     next(error);
   }
 };
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+const createIngredients = async (ingredientInputs) => {
+  const ingredients = [];
+
+  for (const ingredientInput of ingredientInputs) {
+    const ingredient = await Ingredient.create(ingredientInput);
+    ingredients.push(ingredient._id);
+    ingredient.recipes.push(ingredient._id);
+    await ingredient.save();
+  }
+
+  return ingredients;
+};
+
+exports.createRecipeAndJoinWithCategory = async (req, res, next) => {
+  try {
+    req.body.user = req.user._id;
+    const { categoryId } = req.params;
+    const category = await Category.findById(categoryId);
+    if (!category) {
+      return res.status(404).json("The category isn't found");
+    }
+    if (req.file) {
+      req.body.image = req.path;
+    }
+    const ingredients = await createIngredients(req.body.ingredients);
+    const recipe = await Recipe.create({
+      ...req.body,
+      ingredients: ingredients,
+    });
+
+    category.recipes.push(recipe._id);
+    await category.save();
+
+    await req.user.updateOne({ $push: { recipes: recipe } });
+
+    await recipe.save();
+    res
+      .status(201)
+      .json(
+        `The recipe: (${recipe.title}) has been added successfully to the categor: (${category.name})`
+      );
+  } catch (error) {
+    next(error);
+  }
+};
+///////////////////////////////////////////////////////////////////////////////////////////////////////

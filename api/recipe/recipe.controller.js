@@ -24,7 +24,7 @@ exports.deleteRecipe = async (req, res, next) => {
     if (!recipe) {
       return res.status(404).json("The recipe isn't found");
     }
-    if (!recipe.user.equals(req.user._id)) {
+    if (!recipe.user || !recipe.user.equals(req.user._id)) {
       return res
         .status(403)
         .json(
@@ -45,12 +45,15 @@ exports.updateRecipe = async (req, res, next) => {
     if (!recipe) {
       return res.status(404).json("The recipe isn't found");
     }
-    if (!recipe.user.equals(req.user._id)) {
+    if (!recipe.user || !recipe.user.equals(req.user._id)) {
       return res
         .status(403)
         .json(
           `You must be the creator of this recipe name:( ${recipe.title}) to make this action: update it to: (${req.body.title})`
         );
+    }
+    if (req.file) {
+      req.body.image = req.path;
     }
     await recipe.updateOne(req.body);
     res.status(200).json("Updated Successfully");
@@ -88,4 +91,20 @@ exports.addIngredientToRecipe = async (req, res, next) => {
     next(error);
   }
 };
-//
+exports.getOneRecipe = async (req, res, next) => {
+  try {
+    req.body.user = req.user._id;
+    const { recipeId } = req.params;
+
+    const recipe = await Recipe.findById(recipeId)
+      .populate("ingredients")
+      .populate("user");
+
+    if (!recipe) {
+      return res.status(404).json("The recipe isn't found");
+    }
+    res.status(200).json(recipe);
+  } catch (error) {
+    next(error);
+  }
+};

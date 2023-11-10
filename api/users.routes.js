@@ -6,6 +6,7 @@ const {
   signIn,
   getAllUsers,
   createRecipe,
+  createRecipeAndJoinWithCategory,
 } = require("./users.controller");
 const router = express.Router();
 router.post("/user/signup", upload.single("image"), signUp);
@@ -20,5 +21,11 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   upload.single("image"),
   createRecipe
+);
+router.post(
+  "/user/recipe/:categoryId",
+  passport.authenticate("jwt", { session: false }),
+  upload.single("image"),
+  createRecipeAndJoinWithCategory
 );
 module.exports = router;
