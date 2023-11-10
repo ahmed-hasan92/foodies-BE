@@ -6,6 +6,7 @@ const {
   deleteRecipe,
   updateRecipe,
   addIngredientToRecipe,
+  getOneRecipe,
 } = require("./recipe.controller");
 
 const router = express.Router();
@@ -22,11 +23,17 @@ router.delete(
 router.put(
   "/recipes/:recipeId",
   passport.authenticate("jwt", { session: false }),
+  upload.single("image"),
   updateRecipe
 );
 router.post(
   "/recipes/:recipeId/:ingredientId",
   passport.authenticate("jwt", { session: false }),
   addIngredientToRecipe
+);
+router.get(
+  "/recipes/:recipeId",
+  passport.authenticate("jwt", { session: false }),
+  getOneRecipe
 );
 module.exports = router;

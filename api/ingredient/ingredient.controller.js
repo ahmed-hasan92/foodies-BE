@@ -4,7 +4,9 @@ exports.getAllIngredients = async (req, res, next) => {
   try {
     req.body.user = req.user._id;
 
-    const ingredients = await Ingredient.find().populate("user");
+    const ingredients = await Ingredient.find()
+      .populate("user")
+      .populate("recipes");
     res.status(200).json(ingredients);
   } catch (error) {
     next(error);
@@ -26,7 +28,7 @@ exports.updateIngredient = async (req, res, next) => {
   try {
     const { ingredientId } = req.params;
     const ingredient = await Ingredient.findById(ingredientId);
-    console.log(ingredient);
+
     if (!ingredient) return res.status(404).json("Ingredient not found!!!");
 
     if (ingredient.user.equals(req.user._id)) {
@@ -42,7 +44,7 @@ exports.deleteIngredient = async (req, res, next) => {
   try {
     const { ingredientId } = req.params;
     const ingredient = await Ingredient.findById(ingredientId);
-    console.log(ingredient);
+
     if (!ingredient) return res.status(404).json("Ingredient not found!!!");
 
     if (!ingredient.user.equals(req.user._id)) {
