@@ -7,6 +7,8 @@ const {
   getAllUsers,
   createRecipe,
   createRecipeAndJoinWithCategory,
+  forgotPassword,
+  resetPassword,
 } = require("./users.controller");
 const router = express.Router();
 router.post("/user/signup", upload.single("image"), signUp);
@@ -28,4 +30,8 @@ router.post(
   upload.single("image"),
   createRecipeAndJoinWithCategory
 );
+///////////////////////////////////////////////////////////
+router.post("/forgot-password", forgotPassword);
+router.post("/reset-password/:resetToken", resetPassword);
+//////////////////////////////////////////////////////////
 module.exports = router;

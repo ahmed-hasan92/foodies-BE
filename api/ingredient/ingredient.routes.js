@@ -21,12 +21,12 @@ router.post(
   createIngredient
 );
 router.put(
-  "/ingredient/:ingredientId",
+  "/ingredients/:ingredientId",
   passport.authenticate("jwt", { session: false }),
   updateIngredient
 );
 router.delete(
-  "/ingredient/:ingredientId",
+  "/ingredients/:ingredientId",
   passport.authenticate("jwt", { session: false }),
   deleteIngredient
 );
