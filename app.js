@@ -7,6 +7,7 @@ const usersRoutes = require("./api/users.routes");
 const recipeRoutes = require("./api/recipe/recipe.routes");
 const ingredientRoutes = require("./api/ingredient/ingredient.routes");
 const categoryRoutes = require("./api/category/category.routes");
+
 const errorHandler = require("./middlewares/errorHandler");
 const notFound = require("./middlewares/notFound");
 const path = require("path");
@@ -29,6 +30,9 @@ passport.use("jwt", jwtStrategy);
 app.use("/media", express.static(path.join(__dirname, "media")));
 //
 app.use("/api", usersRoutes);
+//////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////
 app.use("/api", recipeRoutes);
 app.use("/api", ingredientRoutes);
 app.use("/api", categoryRoutes);
