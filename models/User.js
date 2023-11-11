@@ -12,6 +12,7 @@ const userSchema = new Schema({
   isAdmin: { type: Boolean, default: false },
   recipes: [{ type: Schema.Types.ObjectId, ref: "Recipe" }],
   ingredients: [{ type: Schema.Types.ObjectId, ref: "Ingredient" }],
+  reviews: [{ type: Schema.Types.ObjectId, ref: "Review" }],
   ////////////////////////////////
   resetToken: String,
   resetTokenExpiration: Date,
