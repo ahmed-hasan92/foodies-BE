@@ -5,7 +5,7 @@ const recipeSchema = new Schema({
   description: String,
   shortDescription: { type: String, maxlength: 100 },
   category: { type: Schema.Types.ObjectId, ref: "Category" },
-  Image: String,
+  image: String,
   ingredients: [{ type: Schema.Types.ObjectId, ref: "Ingredient" }],
   user: { type: Schema.Types.ObjectId, ref: "User" },
   reviews: [{ type: Schema.Types.ObjectId, ref: "Review" }],
