@@ -36,9 +36,7 @@ exports.signUp = async (req, res, next) => {
     if (req.file) {
       req.body.image = req.path;
     }
-    if (req.body.isAdmin) {
-      req.body.isAdmin = true;
-    }
+    req.body.isAdmin = false;
     const newUser = await User.create(req.body);
     const token = generateToken(newUser);
     res.status(201).json({ token });
@@ -140,18 +138,6 @@ exports.createRecipe = async (req, res, next) => {
   }
 };
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
-const createIngredients = async (ingredientInputs) => {
-  const ingredients = [];
-
-  for (const ingredientInput of ingredientInputs) {
-    const ingredient = await Ingredient.create(ingredientInput);
-    ingredients.push(ingredient._id);
-    ingredient.recipes.push(ingredient._id);
-    await ingredient.save();
-  }
-
-  return ingredients;
-};
 
 exports.createRecipeAndJoinWithCategory = async (req, res, next) => {
   try {
@@ -164,11 +150,13 @@ exports.createRecipeAndJoinWithCategory = async (req, res, next) => {
     if (req.file) {
       req.body.image = req.path;
     }
-    const ingredients = await createIngredients(req.body.ingredients);
-    const recipe = await Recipe.create({
-      ...req.body,
-      ingredients: ingredients,
-    });
+
+    const recipe = await Recipe.create(req.body);
+
+    await Ingredient.updateMany(
+      { _id: req.body.ingredients },
+      { $push: { recipes: recipe._id } }
+    );
 
     category.recipes.push(recipe._id);
     await category.save();
