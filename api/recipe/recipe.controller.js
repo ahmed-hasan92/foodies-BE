@@ -8,9 +8,12 @@ exports.getRecipes = async (req, res, next) => {
     const recipe = await Recipe.find()
       .populate({
         path: "user",
-        select: "username",
+        select: "-_id username",
       })
-      .populate("ingredients");
+      .populate({
+        path: "ingredients",
+        select: "-_id name",
+      });
     res.status(200).json(recipe);
   } catch (error) {
     next(error);
@@ -53,7 +56,7 @@ exports.updateRecipe = async (req, res, next) => {
         );
     }
     if (req.file) {
-      req.body.image = req.path;
+      req.body.image = req.file.path;
     }
     await recipe.updateOne(req.body);
     res.status(200).json("Updated Successfully");
@@ -91,6 +94,7 @@ exports.addIngredientToRecipe = async (req, res, next) => {
     next(error);
   }
 };
+
 exports.getOneRecipe = async (req, res, next) => {
   try {
     req.body.user = req.user._id;

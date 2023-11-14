@@ -5,12 +5,20 @@ const Recipe = require("../../models/Recipe");
 exports.getAllCategories = async (req, res, next) => {
   try {
     req.body.user = req.user._id;
-    const categories = await Category.find().populate("recipes");
+    const categories = await Category.find().populate({
+      path: "recipes",
+      populate: {
+        path: "ingredients",
+        model: "Ingredient", // Replace with your Ingredient model schema name
+        select: "name", // Assuming 'name' is the field you want to show
+      },
+    });
     res.status(200).json(categories);
   } catch (error) {
     next(error);
   }
 };
+
 exports.createCategory = async (req, res, next) => {
   try {
     req.body.user = req.user._id;
@@ -30,7 +38,7 @@ exports.createCategory = async (req, res, next) => {
         );
     } else {
       if (req.file) {
-        req.body.image = req.path;
+        req.body.image = req.file.path;
       }
       await Category.create(req.body);
       return res.status(201).json({ message: "The category has been created" });
@@ -63,6 +71,7 @@ exports.deleteCategory = async (req, res, next) => {
     next(error);
   }
 };
+
 exports.updateCategory = async (req, res, next) => {
   try {
     req.body.user = req.user._id;

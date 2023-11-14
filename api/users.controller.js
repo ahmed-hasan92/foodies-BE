@@ -44,6 +44,7 @@ exports.signUp = async (req, res, next) => {
     next(error);
   }
 };
+
 exports.signIn = async (req, res, next) => {
   try {
     const token = generateToken(req.user);
@@ -148,7 +149,7 @@ exports.createRecipeAndJoinWithCategory = async (req, res, next) => {
       return res.status(404).json("The category isn't found");
     }
     if (req.file) {
-      req.body.image = req.path;
+      req.body.image = req.file.path;
     }
 
     const recipe = await Recipe.create(req.body);
@@ -173,4 +174,46 @@ exports.createRecipeAndJoinWithCategory = async (req, res, next) => {
     next(error);
   }
 };
+
+exports.getMyProfile = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user._id);
+    if (!user) return res.status(404).json("User not found");
+    res.status(200).json(user);
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.getUserRecipe = async (req, res, next) => {
+  try {
+    const recipe = await Recipe.find({ user: req.user._id });
+    if (!recipe) return res.status(404).json("Recipe not found");
+    res.status(200).json(recipe);
+  } catch (error) {
+    next(error);
+  }
+};
 ///////////////////////////////////////Workes//////////////////////////////////////////////////////////////
+
+// exports.getMyProfile = async (req, res, next) => {
+//   try {
+//     req.body.user = req.user._id;
+//     const { userId } = req.params;
+//     const user = await User.findById(userId);
+//     if (!user) return res.status(404).json("User not found");
+//     res.status(200).json(user);
+//   } catch (error) {
+//     next(error);
+//   }
+// };
+
+// exports.getMyProfile = async (req, res, next) => {
+//   try {
+//     const user = await User.findById(req.user._id);
+//     if (!user) return res.status(404).json("User not found");
+//     res.status(200).json(user);
+//   } catch (error) {
+//     next(error);
+//   }
+// };

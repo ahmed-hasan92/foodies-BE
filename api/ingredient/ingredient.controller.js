@@ -5,7 +5,7 @@ exports.getAllIngredients = async (req, res, next) => {
     req.body.user = req.user._id;
 
     const ingredients = await Ingredient.find()
-      .populate("user")
+      .populate("category")
       .populate("recipes");
     res.status(200).json(ingredients);
   } catch (error) {
@@ -17,7 +17,7 @@ exports.createIngredient = async (req, res, next) => {
   try {
     req.body.user = req.user._id;
     console.log(req.user._id);
-    const ingredient = await Ingredient.create(req.body);
+    const ingredient = await Ingredient.insertMany(req.body);
     res.status(201).json(ingredient);
   } catch (error) {
     next(error);
