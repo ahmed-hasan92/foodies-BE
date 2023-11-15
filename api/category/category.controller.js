@@ -8,9 +8,9 @@ exports.getAllCategories = async (req, res, next) => {
     const categories = await Category.find().populate({
       path: "recipes",
       populate: {
-        path: "ingredients",
+        path: "ingredients", //field name
         model: "Ingredient", // Replace with your Ingredient model schema name
-        select: "name", // Assuming 'name' is the field you want to show
+        select: "_id name", // Assuming 'name' is the field you want to show
       },
     });
     res.status(200).json(categories);

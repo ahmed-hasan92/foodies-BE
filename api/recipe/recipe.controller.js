@@ -13,6 +13,10 @@ exports.getRecipes = async (req, res, next) => {
       .populate({
         path: "ingredients",
         select: "-_id name",
+      })
+      .populate({
+        path: "category",
+        select: "_id name",
       });
     res.status(200).json(recipe);
   } catch (error) {

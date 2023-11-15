@@ -121,23 +121,23 @@ exports.getAllUsers = async (req, res, next) => {
   }
 };
 
-exports.createRecipe = async (req, res, next) => {
-  try {
-    req.body.user = req.user._id;
-    if (req.file) {
-      req.body.image = req.path;
-    }
-    const recipe = await Recipe.create(req.body);
+// exports.createRecipe = async (req, res, next) => {
+//   try {
+//     req.body.user = req.user._id;
+//     if (req.file) {
+//       req.body.image = req.path;
+//     }
+//     const recipe = await Recipe.create(req.body);
 
-    await req.user.updateOne({ $push: { recipes: recipe } });
+//     await req.user.updateOne({ $push: { recipes: recipe } });
 
-    res.status(201).json({
-      message: `a new recipe ${recipe.title} has been added `,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
+//     res.status(201).json({
+//       message: `a new recipe ${recipe.title} has been added `,
+//     });
+//   } catch (error) {
+//     next(error);
+//   }
+// };
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
 exports.createRecipeAndJoinWithCategory = async (req, res, next) => {
@@ -150,6 +150,11 @@ exports.createRecipeAndJoinWithCategory = async (req, res, next) => {
     }
     if (req.file) {
       req.body.image = req.file.path;
+    }
+
+    req.body.category = categoryId;
+    if (!req.body.category) {
+      return res.status(400).json({ message: "Category ID is undefined" });
     }
 
     const recipe = await Recipe.create(req.body);
