@@ -34,7 +34,7 @@ exports.signUp = async (req, res, next) => {
     }
     req.body.password = await hashPassword(req.body.password);
     if (req.file) {
-      req.body.image = req.path;
+      req.body.image = req.file.path;
     }
     req.body.isAdmin = false;
     const newUser = await User.create(req.body);
@@ -182,7 +182,7 @@ exports.createRecipeAndJoinWithCategory = async (req, res, next) => {
 
 exports.getMyProfile = async (req, res, next) => {
   try {
-    const user = await User.findById(req.user._id);
+    const user = await User.findById(req.user._id).populate("recipes");
     if (!user) return res.status(404).json("User not found");
     res.status(200).json(user);
   } catch (error) {
